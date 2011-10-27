@@ -22,7 +22,7 @@ subscription :request? do |s|
   if accepted_users.include? sender
     write_to_stream s.approve!
   else
-    say s.from, "I'm afraid I don't know you yet, " + sender + ", please introduce yourself to my owner!"
+   # say s.from, "I'm afraid I don't know you yet, " + sender + ", please introduce yourself to my owner!"
     write_to_stream s.refuse!
   end
 end
@@ -31,6 +31,12 @@ end
 #   puts m.inspect
 #   false # fall through
 # end
+
+message :chat?, :body => /^deploy .*?/ do |m|
+  m.body.match /^deploy ([^ ]*) ([^ ]*)/
+  output = IO.popen("cd #{$1}; echo 'cd `pwd`'; echo 'cap #{$2} deploy'", "r") { |pipe| output = pipe.read }
+  say m.from, "#{output}"
+end
 
 message :chat?, :body => 'exit' do |m|
   say m.from, 'Exiting ...'
@@ -43,12 +49,8 @@ end
 
 message :chat?, :body => /^exec .*/ do |m|
   m.body.match /^exec (.*)/
-  pid = fork {
-    system $1
-    puts $1.to_s # logger
-  }
-  Process.detach(pid)
-  say m.from, "You executed: #{$1}"
+  output = IO.popen("#{$1}", "r") { |pipe| output = pipe.read }
+  say m.from, "#{output}"
 end
 
 message :chat?, :body do |m|
