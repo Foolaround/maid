@@ -9,7 +9,17 @@ when_ready {
 }
 
 subscription :request? do |s|
-	write_to_stream s.approve!
+    sender = m.from.to_s.split(/\//).first
+	if accepted_users.include? sender
+		write_to_stream s.approve!
+	else
+# do what?
+	end
+end
+
+message :chat? do |m|
+  puts m.inspect
+  false # fall through
 end
 
 message :chat?, :body => 'exit' do |m|
