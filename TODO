@@ -1,0 +1,19 @@
+- user management
+  - roles
+  - filters
+
+- syntax
+  - subject, verb, object, ...
+  - knowledge
+    - time => https://github.com/hpoydar/chronic_duration
+    - database
+  - tasks
+  - "stack" for short-term memory
+
+- objects
+  - database
+  - states
+  - "backends"
+    - arduino
+    - REST
+    - ...
